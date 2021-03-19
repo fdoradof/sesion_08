@@ -1,0 +1,50 @@
+---
+- name: "Demostracion de bucles"
+  hosts: nodos
+  vars:
+    usuarios:
+      - usuario07
+      - usuario08
+      - usuario09
+  vars_files:
+    vars/default.yml
+
+  tasks:
+    - name: "Creacion de usuario con Bucle Simple"
+      user:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - usuario01
+        - usuario02
+        - usuario03
+    
+    - name: "Creacion de usuarios con Bucles Complejos"
+      user:
+        name: "{{ item.nombre }}"
+        state: present
+        home: "{{ item.directorio }}"
+        uid: "{{ item.identificador }}"
+      loop:
+        - nombre: usuario04
+          directorio: /home/usu_04
+          identificador: 444
+        - nombre: usuario05
+          directorio: /home/usu_05
+          identificador: 555
+        - nombre: usuario06
+          directorio: /home/usu_06
+          identificador: 666
+    
+    - name: "Creacion de usuarios con lista de variables"
+      user:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ usuarios }}"
+
+    - name: "Crecion de usuarion con un Array de diccionarios"
+      user:
+        name: "{{ item.key }}"
+        uid: "{{ item.value.identificador }}"
+        comment: "{{ item.value.telefono }}"
+      loop: "{{ mas_usuarios|dict2items }}"

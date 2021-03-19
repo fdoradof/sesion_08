@@ -1,0 +1,74 @@
+---
+- name: "Demostracion de Delegacion de servicios"
+  hosts: nodos
+  vars:
+    paquetes:
+      - httpd
+      - httpd-tools
+    
+    fire:
+      - http
+      - https
+  
+  tasks:
+    - name: "Instalacion de apache"
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ paquetes }}"
+    
+    - name: "Habilitar firewall"
+      firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        inmediate: yes
+        state: enabled
+      loop: "{{ fire }}"
+    
+    - name: "Deshabilitar selinix"
+      selinux:
+        state: disabled
+
+    - name: "Creacion archivo index"
+      file:
+        path: /var/www/html/index.html
+        state: touch
+        mode: 0765
+        owner: root
+        group: root
+    
+    - name: "Codigo del archivo index"
+      blockinfile:
+        path: /var/www/html/index.html
+        block: |
+          <html>
+          <head>
+          <title>Welcome to Example.com!</title>
+          </head>
+          <body>
+          <h1>Success! The example.com virtual host is working!</h1>
+          </body>
+          </html>
+
+    - name: "Iniciar el servicio de Apache"
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+    
+    - name: "Reinicio del nodo"
+      reboot:
+
+    - name: "Comprobar que el servidor ha levantado correctamente"
+      wait_for:
+        host: "{{ inventory_hostname }}"
+        port: 22
+        state: started
+      delegate_to: localhost
+
+    - name: "Comprobar que el puerto 80 esta a la escucha"
+      wait_for:
+        host: "{{ inventory_hostname }}"
+        port: 80
+        state: started
+      delegate_to: localhost

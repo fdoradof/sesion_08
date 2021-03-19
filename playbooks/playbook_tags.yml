@@ -1,0 +1,35 @@
+---
+- name: "Demostracion de tags"
+  hosts: nodos
+  tasks:
+    - name: "Imprimir n mensaje de comienzo de trabajo"
+      debug:
+        msg: "Vamos a dar comienzo con la implementacion del playbook"
+      tags:
+        - [debug, apache]
+
+    - name: "Imprimir las caracteristicas del servidor"
+      setup:
+      tags:
+        - debug
+
+    - name: "Creacion de usuario"
+      user:
+        name: fdoradof
+      tags:
+        - user
+
+    - name: "Instalacion del servicio Apache"
+      package:
+        name: httpd
+        state: present
+      tags:
+        - apache
+
+    - name: "Arrancar el servicio apache"
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      tags:
+        - apache

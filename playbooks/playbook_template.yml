@@ -1,0 +1,50 @@
+---
+- name: "Demostracion de Templates"
+  hosts: nodos
+  vars:
+    - http_ports:
+        - 80
+        - 81
+        - 8080
+        - 8009
+        - 9000
+  
+  tasks:
+    - name: "Instalacion de apache"
+      yum:
+        name: httpd
+        state: present
+      notify: "restart_apache"
+    
+    - name: "Creacion de los directorios de los puertos"
+      file:
+        path: "/var/www/html/ansible-service-{{ item }}"
+        state: directory
+      loop: "{{ http_ports }}"
+    
+    - name: "Habilitar puertos en el firewalld"
+      firewalld:
+        port: "{{ item }}/tcp"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop: "{{ http_ports }}"
+        
+    - name: "Insertamos el template del index.html"
+      template:
+        src: templates/index.html.j2
+        dest: "/var/www/html/ansible-service-{{ item }}"
+      loop: "{{ http_ports }}"
+    
+    - name: "Modificar la conguracion del Apache"
+      template:
+        src: templates/httpd.conf.j2
+        dest: /etc/httpd/conf/httpd.conf
+      notify: restart_apache
+
+  handlers:
+    - name: "restart_apache"
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes

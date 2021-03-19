@@ -1,0 +1,8 @@
+##
+# Example: ansible-playbook -i inventory roles-playbook.yml -k -K
+##
+
+- name: "Demostracion de roles"
+  hosts: nodos
+  roles:
+ 

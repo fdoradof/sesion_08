@@ -1,0 +1,13 @@
+---
+- name: "Demostracion de registros"
+  hosts: nodos
+  tasks:
+    - name: "Creacion del usuario"
+      user:
+        name: pepe
+        state: present
+      register: creacion_pepe
+    
+    - name: "El UID de pepe es:"
+      debug:
+        msg: "EL uid de pepe es {{ creacion_pepe.uid }}"

@@ -1,0 +1,13 @@
+---
+- name: "Demostracion de los includes"
+  hosts: nodos
+  tasks:
+    - name: "Mensaje de comienzo de importacion"
+      debug:
+        msg: "Dara comienzo la importacion de playbooks y tareas"
+    
+    - name: "Incluir tareas"
+
+
+- name: "Incluir le playbook bucles" 
+

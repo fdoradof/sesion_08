@@ -1,0 +1,36 @@
+---
+- name: "Demostracion de errores"
+  hosts: nodos
+  vars:
+    paquetes:
+      - vim
+      - blockdenotas
+
+  tasks:
+    - name: "Instalacion de servico httpd"
+      yum:
+        name: httpd
+        state: present
+      register: comprobacion
+      changed_when: comprobacion.results is defined
+      notify: "reinicio_apache"
+
+    - name: "Instalacion de paqueteria"
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ paquetes }}"
+      ignore_errors: yes
+
+    - name: "Cuando la memoria se menor a 2Gb nos indicara un fallo"
+      shell: "cat /proc/meminfo|grep -i memtotal|awk '{print $2/1024/1024}'"
+      register: memoria
+      failed_when: memoria.stdout|float < 2
+  
+  handlers:
+    - name: "reinicio_apache"
+      service:
+        name: httpd
+        state: restarted
+
+      

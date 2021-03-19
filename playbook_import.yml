@@ -1,0 +1,11 @@
+---
+- name: "Demostracion de los imports"
+  hosts: nodos
+  tasks:
+    - name: "Mensaje de comienzo de importacion"
+      debug:
+        msg: "Dara comienzo la importacion de playbooks y tareas"
+    - name: "Importar una lista de tareas"
+
+
+- name: "Importa del playbook"
