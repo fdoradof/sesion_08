@@ -1,5 +1,5 @@
 ##
-# Example: ansible-playbook -i inventory roles-playbook.yml -k -K
+# Example: ansible-playbook -i inventory playbook_roles.yml -k -K
 ##
 
 - name: "Demostracion de roles"
