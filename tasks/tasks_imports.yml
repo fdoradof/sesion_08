@@ -1,3 +1,4 @@
+---
 - name: "Registrar la hora actual del nodo"
   command: "date +%T"
   register: hora_actual

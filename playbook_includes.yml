@@ -7,7 +7,15 @@
         msg: "Dara comienzo la importacion de playbooks y tareas"
     
     - name: "Incluir tareas"
-
+      include_tasks: tasks/tasks_imports.yml
 
 - name: "Incluir le playbook bucles" 
+  vars:
+    paquetes:
+      - ipmitool
+      - vim
+      - mariadb-server
+      - blocknotas
+  include: playbooks/playbook_errores.yml
+
 

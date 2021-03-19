@@ -6,6 +6,7 @@
       debug:
         msg: "Dara comienzo la importacion de playbooks y tareas"
     - name: "Importar una lista de tareas"
-
+      import_tasks: tasks/tasks_imports.yml
 
 - name: "Importa del playbook"
+  import_playbook: playbooks/playbook_bloques02.yml

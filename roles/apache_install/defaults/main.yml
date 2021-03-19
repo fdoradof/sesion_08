@@ -1,0 +1,8 @@
+---
+paquetes:
+  - httpd
+  - httpd-tools
+fire:
+  - http
+  - https
+ 

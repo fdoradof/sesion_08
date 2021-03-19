@@ -1,8 +1,24 @@
 ##
-# Example: ansible-playbook -i inventory playbook_roles.yml -k -K
+# Example: ansible-playbook -i inventory playbook_roles.yml
 ##
 
 - name: "Demostracion de roles"
   hosts: nodos
+  pre_tasks:
+    - name: "Intalar MySQL-python"
+      yum:
+        name: MySQL-python
+        state: present
+
   roles:
- 
+    - role: apache_install
+
+    - role: mariadb
+      vars: { mysql_users: ["test01","test02","test03"] }
+
+    - role: rhel-system-roles.timesync
+      vars:
+        timesync_ntp_servers:
+          - hostname: 'time.google.com' 
+            iburst: yes
+    
