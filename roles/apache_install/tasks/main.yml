@@ -1,0 +1,50 @@
+---
+- name: "Instalacion de servico httpd"
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ paquetes }}"
+  tags: apache
+
+- name: "Habilitar el firewall"
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop: "{{ fire }}"
+  tags: firewall
+
+- name: "Deshabilitar el selinux"
+  selinux:
+    state: disabled
+  tags: sel
+
+- name: "Creamos el fichero index"
+  file:
+    path: /var/www/html/index.html
+    mode: 0765
+    owner: root
+    group: root
+    state: touch
+
+- name: "Insertamos el contenido del index.html"
+  blockinfile:
+    path: /var/www/html/index.html
+    block: |
+      <html>
+      <head>
+      <title>Welcome to Example.com!</title>
+      </head>
+      <body>
+      <h1>Success! The example.com virtual host is working!</h1>
+      </body>
+      </html>
+  tags: modificacion
+
+- name: "Comprobamos que el servidor ha levando correctamente"
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22 
+    state: started
+  delegate_to: localhost
