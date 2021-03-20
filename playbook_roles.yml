@@ -12,10 +12,8 @@
 
   roles:
     - role: apache_install
-
     - role: mariadb
       vars: { mysql_users: ["test01","test02","test03"] }
-
     - role: rhel-system-roles.timesync
       vars:
         timesync_ntp_servers:
